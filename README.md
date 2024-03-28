@@ -12,6 +12,6 @@ This extension only works with NVDA add-on IndentNav version 2.0 or later.
 
 ## Release Notes
 
-### 1.0
+### 1.0.0
 
 Initial release.
