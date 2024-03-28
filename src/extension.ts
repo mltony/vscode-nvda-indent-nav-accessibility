@@ -4,7 +4,7 @@ import { join } from 'path';
 import * as net from 'net';
 import { execSync } from 'child_process';
 
-const DEBUG = true;
+const DEBUG = false;
 const MYLOG_FILE_NAME = 'H:\\1.txt';
 
 function initLogFile() {
@@ -23,23 +23,7 @@ function mylog(data: string) {
 	}
 }
 
-function writeToFile(filename: string, data: string) {
- writeFileSync(filename, data, {
-	flag: 'a',
- });
-
- console.log(`Data written to ${filename}`);
-}
-
 const LINE_BREAKS_REGEX = /\r?\n|\r/g;
-
-function getParentProcessId(): number {
-	const pid = process.pid;
-    const output = execSync(`wmic process where (ProcessId=${pid}) get ParentProcessId`).toString();
-    const parentPid = parseInt(output.split('\n')[1].trim(), 10);
-    return parentPid;
-}
-
 
 function getActiveTextEditor(): vscode.TextEditor {
 	if (vscode.window.activeTextEditor) {
@@ -55,7 +39,6 @@ function getStoryLength(json: any): any {
 	return {
 		'result': length
 	};
-
 }
 
 function getStoryText(json: any): any {
@@ -139,7 +122,6 @@ function getSelectionOffsets(json: any): any {
 	const anchorRange = new vscode.Range(0, 0, anchorPosition.line, anchorPosition.character);
 	const textUntilAnchor = editor.document.getText(anchorRange);
 	const anchorLength = textUntilAnchor.length;
-
 	return {
 		'result': [
 			anchorLength,
@@ -149,16 +131,6 @@ function getSelectionOffsets(json: any): any {
 }
 
 function getStatus(json: any): any {
-	if (false) {
-		const focusedView = vscode.commands.executeCommand('vscode.commands.getContext', 'focusedView');
-		mylog('asdf getting focused view');
-		vscode.commands.executeCommand('vscode.commands.qqqgetContext', 'focusedView').then(focusedView => {
-			mylog(`asdf Currently focused view: ${focusedView}`);
-			// You can return the focusedView here if you need to use it elsewhere
-		});
-	}
-
-
 	return {
 		'result': {
 			'focused': vscode.window.state.focused,
@@ -168,9 +140,7 @@ function getStatus(json: any): any {
 	};
 }
 
-
 function handleRequest(json: any): any {
-	//mylog('Received data: ' + json);
 	let command;
 	try {
 		command = json['command'];
@@ -211,10 +181,8 @@ function packJsonResponse(json: any): Buffer {
 	return buffer;
 }
 
-
 export function activate(context: vscode.ExtensionContext) {
 	initLogFile();
-
 	mylog("Initializing!");
 
 	// Create a named pipe server
@@ -233,6 +201,7 @@ export function activate(context: vscode.ExtensionContext) {
 				const jsonString = buffer.slice(0, expectedLength).toString();
 				mylog(`Read request ${jsonString}`);
 				buffer = buffer.slice(expectedLength);
+				expectedLength = -1;
 				let requestJson, responseJson;
 				try {
 					requestJson = JSON.parse(jsonString);
@@ -258,15 +227,12 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 				mylog('Computed response: ' + JSON.stringify(responseJson));
 				socket.write(packJsonResponse(responseJson));
-				expectedLength = -1;
 			}
 		});
-	
 		socket.on('end', () => {
 			mylog('Client disconnected');
 		});
 	});
-	//const vscodePid = getParentProcessId();
 	const pid = process.pid;
 	const pipeName = `\\\\.\\pipe\\VSCodeIndentNavBridge${pid}`;
 	server.listen(pipeName, () => {
