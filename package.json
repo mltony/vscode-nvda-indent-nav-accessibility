@@ -1,8 +1,15 @@
 {
   "name": "nvda-indent-nav-accessibility",
   "displayName": "Accessibility for NVDA IndentNav",
-  "description": "Provides enhanced accessibility support for NVDA IndentNav add-on. In particular, it allows NVDA so see the entire file, not the first 500 lines.",
-  "version": "0.0.1",
+  "description": "Provides enhanced accessibility support for NVDA IndentNav add-on. In particular, it allows NVDA to see the entire file, not the first 500 lines.",
+  "version": "1.0.0",
+  "publisher": "TonyMalykh",
+  "license": "MIT",
+  "bugs": "https://github.com/mltony/vscode-nvda-indent-nav-accessibility/issues",
+  "repository": {
+	  "type": "git",
+	  "url": "https://github.com/mltony/vscode-nvda-indent-nav-accessibility/"
+  },
   "engines": {
     "vscode": "^1.87.0"
   },
