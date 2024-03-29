@@ -4,7 +4,7 @@ import { join } from 'path';
 import * as net from 'net';
 import { execSync } from 'child_process';
 
-const DEBUG = false;
+const DEBUG = true;
 const MYLOG_FILE_NAME = 'H:\\1.txt';
 
 function initLogFile() {
@@ -19,7 +19,7 @@ function mylog(data: string) {
 	if (DEBUG) {
 		writeFileSync(MYLOG_FILE_NAME, data + '\n', {
 			flag: 'a',
-		 });
+		});
 	}
 }
 
@@ -130,12 +130,22 @@ function getSelectionOffsets(json: any): any {
 	};
 }
 
+function getExtensionVersion(): string {
+	const extension = vscode.extensions.getExtension('TonyMalykh.nvda-indent-nav-accessibility');
+	if (extension === undefined) {
+		return "0";
+	}
+	return extension.packageJSON.version;
+}
+
 function getStatus(json: any): any {
 	return {
 		'result': {
 			'focused': vscode.window.state.focused,
 			'activeTextEditorPresent': vscode.window.activeTextEditor !== null,
 			'title': process.title,
+			'extensionVersion': getExtensionVersion(),
+			'vscodeVersion': vscode.version,
 		}
 	};
 }
