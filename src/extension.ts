@@ -4,7 +4,7 @@ import { join } from 'path';
 import * as net from 'net';
 import { execSync } from 'child_process';
 
-const DEBUG = true;
+const DEBUG = false;
 const MYLOG_FILE_NAME = 'H:\\1.txt';
 
 function initLogFile() {
