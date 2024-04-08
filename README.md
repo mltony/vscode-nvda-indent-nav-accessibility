@@ -10,6 +10,13 @@ This extension creates a named pipe and acts as a server communicating with clie
 
 This extension only works with NVDA add-on IndentNav version 2.0 or later.
 
+## Debugging
+To verify that the extension works as expected, check if it creates a named pipe by opening powershell and typing:
+```
+[System.IO.Directory]::GetFiles("\\.\\pipe\\") | Where-Object { $_.StartsWith("\\.\\pipe\\VSCodeIndentNavBridge") }
+```
+If command output is not empty, this means that extension has loaded successfully, created a named pipe and ready to listen to incoming connections from NVDA IndentNav add-on v2.0 or later.
+
 ## Release Notes
 
 ### 1.0.0
